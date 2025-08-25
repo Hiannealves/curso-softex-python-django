@@ -61,9 +61,22 @@ while True:
                 print("Valor Inválido!")      
                   
             elif opcao == "4":
-                 pass
+                boleto=float(input("Entre com o valor do boleto:"))
+                if boleto <(saldo_atual+ limite_de_saque_negativo):
+                    saldo-=boleto
+                else:
+                    print("Saldo insuficiente.")
+
             elif opcao == "5":
-                pass
+                senha_antiga = input("Digite sua senha antiga:")
+                senha_nova1 = input("Digite sua nova senha:")
+                senha_nova2 = input("Confirme sua nova senha:")
+                if senha_antiga == senha_usuário and senha_nova1==senha_nova2:
+                    senha_usuário=senha_nova1
+                    print("Senha atuaizada com sucesso!")
+                else:
+                    print("Senha inválida") 
+                                    
             elif opcao == "6":
                print("Atendimento Finalizado")
                break
