@@ -1,0 +1,22 @@
+"""isdigit() → só números."""
+telefone_num = (input("Digite um número de telefone com 11 dígitos"))
+
+valido = True
+
+if telefone_num.isdigit() and len(telefone_num)== 11:
+    print("número tem 11 digitos númericos")
+else:
+    print("número inválido")
+    valido = False
+
+
+valido = True
+for c in telefone_num:
+    contador_repetidos  = 0
+    for d in telefone_num:
+        print(f"num C {c} num D {d} são iguais?{c == d}")
+        if c==d:
+            contador_repetidos+=1
+        if contador_repetidos>=3:
+            print("número não é válido")
+            break    
