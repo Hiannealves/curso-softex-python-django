@@ -14,12 +14,12 @@ Programa de banco
 # criar variavel definindo usuario e senha
 cc = "123456-7" 
 senha_usuário = "9999"
-nome_de_usuário=("José")
+nome_de_usuário=(" José")
 saldo_atual = 0
 limite_de_saque_negativo = 500
 
 while True:
-    for i in range(3)
+    for i in range(3):
          conta = input("Digite sua Conta corrente")
          senha = input("Digite sua senha")
          if conta==cc and senha==senha_usuário:
@@ -35,15 +35,15 @@ while True:
 
     while True:
             opcao = input("Escolha uma opção:\n"\
-            "1- Ver saldo.\n" \
-            "2- Sacar Valor.\n" \
-            "3- Depositar.\n" \    
-            "4- Pagar Boleto.\n" \
-            "5- Alterar senha.\n" \
+            "1- Ver saldo.\n" 
+            "2- Sacar Valor.\n" 
+            "3- Depositar.\n"   
+            "4- Pagar Boleto.\n" 
+            "5- Alterar senha.\n" 
             "6- Sair.\n")
 
             if opcao == "1":
-                print(f"Seu saldo Atual é{saldo_atual},")
+                print(f"Seu saldo Atual é R$ {saldo_atual},")
 
             elif opcao == "2":
                  valor_a_sacar = float(input("Digite o valor a ser sacado:"))
@@ -56,10 +56,12 @@ while True:
             elif opcao == "3":
                  depositar = float(input("Digite o valor a ser depositado"))
                  if depositar >0:
-                     saldo += depositar
-            else:
-                print("Valor Inválido!")      
+                     saldo_atual += depositar
+                     print("Depósito realizado com sucesso! seu saldo é R$" ,saldo_atual)
+                 else:
+                  print("Valor Inválido!")      
                   
+            
             elif opcao == "4":
                 boleto=float(input("Entre com o valor do boleto:"))
                 if boleto <(saldo_atual+ limite_de_saque_negativo):
