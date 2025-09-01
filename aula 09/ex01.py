@@ -7,7 +7,7 @@ numero = [2,5,6,9,4,8,9,4,9]
 numero_procurado = 9
 contador = 0
 
-for num in numero: 
+for num in numero: # contador = numero.count(número_procurado)
     if num == numero_procurado:
         contador+=1
 
