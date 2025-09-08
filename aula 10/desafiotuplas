@@ -1,0 +1,33 @@
+registros = []
+usuarios_sucesso = set()
+
+while True:
+    try:
+      usuario = input("Digite o nome de usuário (Ou 'parar' para encerrar. )")
+    if usuario.lower() == "parar":
+     break
+
+    print("1 - Sucesso")
+    print("2 - Falha")
+    status_opcao = input("Digite a opção 1 ou 2")
+
+    if status_opcao == "1":
+      try:
+        duracao = int(input("Digite a duração da sessão em mínutos: "))
+      except ValueError:
+        print("Valor inválido! Duração = 0")
+        duracao = 0 
+
+    registros.append(usuario,"sucesso", duracao)
+    usuarios_sucesso.add(usuario)        
+
+    elif status_opcao == "2":
+    registros.append(usuario, "falha", 0)    
+    print("\n Registros de acessos:")
+    print(registros)
+    
+    else:
+    print("\n Usuários que tiveram sucesso:")
+    print(usuarios_sucesso)
+
+    print(f"\n Tempo total de acesso bem sucedido: {tempo_total} minutos")
