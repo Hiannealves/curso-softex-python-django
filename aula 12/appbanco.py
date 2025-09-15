@@ -12,71 +12,91 @@ x 9- dizer o nome do usuario
 10- pagar boleto
 """
 
-# declaração constantes
-conta_corrente = "123456-7"
-senha_usuario = "9999"
-saldo_atual = 0
-limite_saldo_negativo = 500.00
-nome_usuario = "José"
+def banco() -> dict:
+    """Carrega os dados inicias do banco dados, que inclui usuario e configurações"""
+    return {
+        "usuarios": {
+            "123456-7": {
+                "senha": "9999",
+                "nome": "José",
+                "saldo": 1500.00,
+                "limite_cheque_especial": 500.00,
+            },
+        },
+        "tentavas_login": 3,
+        "ultima_conta_base": "123456",
+        "digito_verificador": "7",
+    }
 
-while True:
-    for i in range(3):
-        conta = input("Entre com a sua conta corrente: ")
-        senha = input("Entre com a sua senha: ")
-        if conta == conta_corrente and senha == senha_usuario:
-            print(f"Bem vindo {nome_usuario}!")
-            acesso_permitido = True
-            break
+def autenticar_usuario(
+        dados_banco:dict, 
+        conta:str,
+        senha:str,
+        ) -> tuple[bool, dict | None]:
+    """Autentica o usuario com base na conta e senha. Retorna o status e o usuario"""
+    usuario_encontrado = dados_banco["usuarios"].get(conta, None) # None == nada
+
+    if usuario_encontrado and usuario_encontrado["senha"] == senha:
+        return True, usuario_encontrado
+    
+    return False, None
+
+def verificar_saldo(usuario:dict) -> None:
+    """Mostra para o usuario o saldo atual dele"""
+    print(f"Seu saldo atual é de R$ {usuario["saldo"]:.2f}")
+    print(f"Seu limite de cheque especial é de R$ {usuario["limite_cheque_especial"]:.2f}")
+
+def cadastrar_cliente(dados_banco:dict) -> None:
+    """Cadastra um novo usuário no sistema"""
+    print("--- Novo cadastro de Cliente ---")
+
+    ultima_conta = dados_banco["ultima_conta_base"]
+    nova_conta = int(ultima_conta) + 1
+
+    novo_numero_conta = f"{nova_conta}-{dados_banco["digito_verificador"]}"
+
+    if novo_numero_conta in dados_banco["usuarios"]:
+        print("Erro! Está conta já esta cadastrada.")
+        return
+    
+    nova_senha = input("Defina uma senha para sua conta: ")
+    nome_cliente = input("Defina o nome do cliente: ")
+
+    dados_banco["usuarios"][novo_numero_conta] = {
+        "senha": nova_senha,
+        "nome": nome_cliente,
+        "saldo": 0.00,
+        "limite_cheque_especial": 500.00
+    }
+
+    dados_banco["ultima_conta_base"] = str(nova_conta)
+    print(f"Cliente {nome_cliente} cadastrado com sucesso na conta {novo_numero_conta}.")
+
+def listar_clientes(banco_dados:dict) -> None:
+    """Lista todos os clientes cadastrados no sistema"""
+    print("\n--- Clientes Cadastrados ---")
+
+    if not banco_dados["usuarios"]:
+        print("Nenhum cliente cadastrado")
+        return
+    
+    for conta, usuario in banco_dados["usuarios"].items():
+        print(f"Nome: {usuario["nome"]} | Conta: {conta}")
+        print("-"*30)
+
+def sacar_valor(usuario:dict) -> None:
+    """Permite ao usuario sacar um valor, verificando saldo"""
+    try:
+        valor_a_sacar = float(input("Entre com o valor a ser sacado: "))
+        if valor_a_sacar <= 0:
+            print("Valor inválido.")
+            return
+
+        limite_total = usuario["saldo"] + usuario["limite_cheque_especial"]
+        if valor_a_sacar <= limite_total:
+            usuario["saldo"] -= valor_a_sacar
+            print("Saque realizado com sucesso, retire seu valor.")
         else:
-            print("Conta ou senha inválida!")
-            acesso_permitido = False
-
-    if not acesso_permitido:
-        break
-
-    while True:
-        opcao = input(
-            "Escolha uma opção:\n"
-            "1- Ver saldo.\n"
-            "2- Sacar valor.\n"
-            "3- Depositar.\n"
-            "4- Pagar Boleto.\n"
-            "5- Alterar senha.\n"
-            "6- Sair.\n"
-        )
-
-        if opcao == "1":
-            print(f"Seu saldo atual é de {saldo_atual}.")
-        elif opcao == "2":
-            valor_a_sacar = float(input("Entre com o valor a ser sacado: "))
-            if valor_a_sacar <= (saldo_atual + limite_saldo_negativo):
-                saldo_atual -= valor_a_sacar
-                print("Saldo liberado, retire seu valor!")
-            else:
-                print("Saldo insuficiente!")
-        elif opcao == "3":
-            depositar = float(input("Insira o valor a ser depositado: "))
-            if depositar > 0:
-                saldo_atual += depositar
-            else:
-                print("Valor inválido!")
-        elif opcao == "4":
-            boleto = float(input("Entre com o valor do boleto"))
-            if boleto < (saldo_atual + limite_saldo_negativo):
-                saldo_atual -= boleto
-            else:
-                print("Saldo insuficiente!")
-        elif opcao == "5":
-            senha_antiga = input("Digite a senha antiga: ")
-            senha_nova1 = input("Digite a senha nova: ")
-            senha_nova2 = input("Repita a senha nova: ")
-            if senha_antiga == senha_usuario and senha_nova1 == senha_nova2:
-                senha_usuario = senha_nova1
-                print("Senha atualizada com sucesso!")
-            else:
-                print("Senha inválida")
-        elif opcao == "6":
-            print("Atendimento Finanilzado")
-            break
-        else:
-            print("Opção Inválida")
+            print("Saldo insuficiente")
+    except ValueError:
+        print("Erro! Valor inválido, digite apenas números.")
