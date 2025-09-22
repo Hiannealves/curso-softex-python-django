@@ -17,7 +17,9 @@ class Biblioteca:
 bib = Biblioteca()
 l1 = Livro("1984", "George Orwell")
 l2 = Livro("Dom Casmurro", "Machado de Assis")
+l3 = Livro("The secret", "Rhondo Byrne")
 
 bib.adicionar_livro(l1)
 bib.adicionar_livro(l2)
+bib.adicionar_livro(l3)
 bib.listar_livros()
